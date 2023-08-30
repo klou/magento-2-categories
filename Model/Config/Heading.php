@@ -12,6 +12,7 @@
 namespace Magepow\Categories\Model\Config;
 
 use Magento\Framework\Exception\LocalizedException;
+use Laminas\Validator\Regex;
 
 class Heading extends \Magento\Framework\App\Config\Value
 {
@@ -22,13 +23,12 @@ class Heading extends \Magento\Framework\App\Config\Value
     public function beforeSave()
     {
         $value = $this->getValue();
-        $validator = \Zend_Validate::is(
-            $value,
-            'Regex',
+        $validator = new Regex(
             ['pattern' => '/^[\p{L}\p{N}_,;:!&#\+\*\$\?\|\'\.\-\ ]*$/iu']
         );
-        
-        if (!$validator) {
+
+
+        if (! $validator->isValid($value) ) {
             $message = __(
                 'Please correct categories heading: "%1".',
                 $value
